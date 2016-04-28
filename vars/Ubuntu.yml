@@ -1,0 +1,18 @@
+---
+# vars file for cartertdte.mta
+zimbra_required_packages:
+  - netcat
+  - sudo
+  - libidn11
+  - libgmp10
+  - libaio1
+  - libstdc++6
+  - unzip
+  - perl
+  - libperl5.18
+  - pax
+  - sysstat
+  - sqlite3
+  - resolvconf
+  - dnsmasq
+  - wget

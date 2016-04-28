@@ -1,0 +1,7 @@
+---
+# test
+
+- name: Install Zimbra Dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - "{{ zimbra_required_packages }}"

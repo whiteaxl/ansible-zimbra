@@ -1,0 +1,60 @@
+---
+# tasks file for cartertdte.mta
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags: zimbra
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: zimbra
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: zimbra
+
+- name: Set hostname
+  command: hostname {{ zimbra_hostname }}
+
+- name: Set hosts file
+  template:
+    src=hosts.j2
+    dest=/etc/hosts
+    owner=root
+    mode=0644
+
+- name: Disable and stop dnsmasq service
+  service:
+    name=dnsmasq
+    state=stopped
+    enabled=no
+
+- name: Create Source Software Directory
+  file: path=/opt/src state=directory
+
+- name: 'Download Zimbra .tgz file'
+  get_url:
+    url={{ zimbra_download_url }}
+    dest=/opt/src/{{ zimbra_file }}.tgz
+    timeout=60
+    sha256sum={{ zimbra_256sum_file }}
+
+- name: Check if Zimbra is installed
+  stat: path=/opt/zimbra/bin/zmprov
+  register: zimbra_check_installation
+
+- include: install_zimbra.yml
+  when: zimbra_check_installation.stat.islnk is not defined
+
+- name: Check if Zimbra is configured
+  command: /opt/zimbra/bin/zmprov gd {{ zimbra_default_domain }}
+  ignore_errors: yes
+  register: zimbra_check_configuration
+
+- include: configure_zimbra.yml
+  when: zimbra_check_configuration.rc != 0
+
+- name: Start zimbra
+  service: name=zimbra state=restarted
+
+- include: provision_zimbra.yml

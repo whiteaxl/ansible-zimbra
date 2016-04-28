@@ -1,0 +1,6 @@
+---
+# Install zimbra dependencies
+
+- name: Install Zimbra Dependencies
+  apt: name={{ item }} state=present
+  with_items: zimbra_required_packages
