@@ -21,13 +21,38 @@
     src=hosts.j2
     dest=/etc/hosts
     owner=root
+    group=root
     mode=0644
+  notify:
+    - dnsmasq restart
 
-- name: Disable and stop dnsmasq service
+- name: Set resolv.conf file
+  template:
+    src=resolv.conf.j2
+    dest=/etc/resolv.conf
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - dnsmasq restart
+
+- name: Resolv self hostname via dnsmasq
+  template:
+    src=hostname.dnsmasq.j2
+    dest=/etc/dnsmasq.d/{{ ansible_hostname }}
+    owner=root
+    group=root
+    mode=0644
+  notify:
+    - dnsmasq restart
+
+- name: Enable dnsmasq service
   service:
     name=dnsmasq
-    state=stopped
-    enabled=no
+    enabled=yes
+
+- name: Ensure handlers run now
+  meta: flush_handlers
 
 - name: Create Source Software Directory
   file: path=/opt/src state=directory
@@ -56,5 +81,6 @@
 
 - name: Start zimbra
   service: name=zimbra state=restarted
+  ignore_errors: yes
 
 - include: provision_zimbra.yml

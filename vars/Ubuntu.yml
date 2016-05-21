@@ -10,9 +10,11 @@ zimbra_required_packages:
   - unzip
   - perl
   - libperl5.18
+  - netcat-openbsd
   - pax
   - sysstat
   - sqlite3
   - resolvconf
   - dnsmasq
+  - dnsutils
   - wget

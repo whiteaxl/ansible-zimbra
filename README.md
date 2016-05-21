@@ -9,7 +9,7 @@ Requirements
 * CentOS 6, 7
 * RHEL 6, 7
 * Ubuntu 14.04
-* Correctly configure DNS
+* Correctly configure DNS : now auto-configured using dnsmasq
 * Correctly configued `/etc/hosts` file : now auto-configured by this ansible role
 
 Role Variables
@@ -94,3 +94,5 @@ Author Information
 ------------------
 
 Based on ansible-zimbradev by pbruna
+
+Modified by paulbsd

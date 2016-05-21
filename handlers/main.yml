@@ -3,3 +3,6 @@
 
 - name: postfix restart
   service: name=postfix state=restarted
+
+- name: dnsmasq restart
+  service: name=dnsmasq state=restarted
